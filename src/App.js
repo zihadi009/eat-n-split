@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const initialFriends = [
   {
@@ -30,7 +30,16 @@ function Button({ children, onClick }) {
 }
 
 export default function App() {
-  const [friends, setFriends] = useState(initialFriends);
+  const [friends, setFriends] = useState(() => {
+    const localFriends = localStorage.getItem("friends")
+    return localFriends ? JSON.parse(localFriends) : initialFriends
+  });
+  
+  useEffect(() => {
+    if(friends) {
+      localStorage.setItem("friends", JSON.stringify(friends))
+    }
+  }, [friends]);
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
 
